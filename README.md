@@ -58,6 +58,8 @@ cp Config/Signing.example.xcconfig Config/Signing.xcconfig     # your bundle id 
 scripts/install-launchagent.sh                                  # keeps them installed (free teams expire after 7 days)
 ```
 
+Every game has a **How to play** screen with steps and a video link (tap **?** while playing), also written up in [how to play](docs/how-to-play.md).
+
 Details: [build and install](docs/build-and-install.md) · [auto-install](docs/auto-install.md) · [architecture](docs/architecture.md) ·
 [multiplayer](docs/multiplayer.md) · [adding a game](docs/adding-a-game.md) · [testing](docs/testing.md)
 

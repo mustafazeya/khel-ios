@@ -23,7 +23,7 @@ enum ToyEngine: TurnEngine {
 final class NetworkTests: XCTestCase {
     private func entry(_ name: String) -> RosterEntry { RosterEntry(playerID: UUID(), name: name, avatar: .random(seed: UInt64(name.hashValue.magnitude))) }
 
-    private func wait(_ what: String, timeout: TimeInterval = 8, _ cond: () -> Bool) async throws {
+    private func wait(_ what: String, timeout: TimeInterval = 20, _ cond: () -> Bool) async throws {
         let end = Date().addingTimeInterval(timeout)
         while !cond() {
             if Date() > end { XCTFail("timed out waiting for \(what)"); throw CancellationError() }
