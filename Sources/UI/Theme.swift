@@ -22,8 +22,8 @@ enum Theme {
 
     /// Distinct colour per seat, used for pieces and highlights.
     static let seatColors: [Color] = [
-        Color(red: 0.95, green: 0.30, blue: 0.30), Color(red: 0.25, green: 0.55, blue: 0.98),
-        Color(red: 0.98, green: 0.80, blue: 0.20), Color(red: 0.25, green: 0.80, blue: 0.45),
+        Color(red: 0.22, green: 0.50, blue: 0.95), Color(red: 0.93, green: 0.27, blue: 0.27),
+        Color(red: 0.18, green: 0.72, blue: 0.40), Color(red: 0.98, green: 0.78, blue: 0.15),
     ]
 }
 
