@@ -10,17 +10,22 @@ final class Feedback {
     enum Sound: CaseIterable { case tap, place, capture, roll, win, lose, error }
 
     private let engine = AVAudioEngine()
-    private let players: [Sound: AVAudioPlayerNode]
-    private let buffers: [Sound: AVAudioPCMBuffer]
+    private var players: [Sound: AVAudioPlayerNode] = [:]
+    private var buffers: [Sound: AVAudioPCMBuffer] = [:]
     private var started = false
+    private var prepared = false
+    private let disabled = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
     private let impactLight = UIImpactFeedbackGenerator(style: .light)
     private let impactMedium = UIImpactFeedbackGenerator(style: .medium)
     private let notify = UINotificationFeedbackGenerator()
 
-    private init() {
+    private init() {}
+
+    /// Builds the audio graph on first use, so launching the app never waits on the audio system.
+    private func prepare() {
+        guard !prepared else { return }
+        prepared = true
         let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 1)!
-        var players: [Sound: AVAudioPlayerNode] = [:]
-        var buffers: [Sound: AVAudioPCMBuffer] = [:]
         for sound in Sound.allCases {
             let node = AVAudioPlayerNode()
             engine.attach(node)
@@ -28,8 +33,6 @@ final class Feedback {
             players[sound] = node
             buffers[sound] = Self.render(sound, format: format)
         }
-        self.players = players
-        self.buffers = buffers
     }
 
     /// Sequence of (frequency Hz, seconds) notes with a soft envelope.
@@ -74,7 +77,9 @@ final class Feedback {
     }
 
     func play(_ sound: Sound) {
-        guard settings?.sound ?? true, let node = players[sound], let buffer = buffers[sound] else { return }
+        guard !disabled, settings?.sound ?? true else { return }
+        prepare()
+        guard let node = players[sound], let buffer = buffers[sound] else { return }
         startIfNeeded()
         guard started else { return }
         node.stop()

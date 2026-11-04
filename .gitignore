@@ -8,3 +8,4 @@ xcuserdata/
 .vscode/
 Sources/Info.plist
 Config/Signing.xcconfig
+Config/devices.allow

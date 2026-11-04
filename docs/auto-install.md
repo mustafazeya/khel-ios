@@ -22,6 +22,15 @@ The agent (`io.github.khel.auto-install`) runs when you log in and then every ho
 - A lock prevents two runs at once, and an unreachable phone is skipped and retried an hour later.
 - State is kept in `~/Library/Application Support/Khel/` (one timestamp file per phone).
 
+## Choose which iPhones get the app
+
+Create `Config/devices.allow` (git-ignored) with one UDID per line (`#` starts a comment). Only those phones are installed on, by both
+`install-iphone.sh` and the hourly job. Delete the file to go back to every paired iPhone.
+
+```bash
+scripts/list-iphones.sh        # prints id, name, paired state (honours the allow-list)
+```
+
 ## Handy commands
 
 ```bash
