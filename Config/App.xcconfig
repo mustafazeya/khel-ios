@@ -1,0 +1,4 @@
+// Build settings. Signing lives in a git-ignored file; see Signing.example.xcconfig.
+KH_BUNDLE_ID = com.example.khel
+DEVELOPMENT_TEAM =
+#include? "Signing.xcconfig"

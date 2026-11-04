@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          brew install xcodegen
+
+      - name: Repository has no private files
+        run: |
+          if git ls-files | grep -E 'Config/Signing\.xcconfig$'; then
+            echo "A private file is tracked"; exit 1
+          fi
+
+      - name: Shell scripts parse
+        run: |
+          for f in install-iphone.sh scripts/*.sh; do bash -n "$f"; done
+          scripts/install-launchagent.sh --print | plutil -lint -
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Unit tests (simulator)
+        run: |
+          DEVICE=$(xcrun simctl list devices available | grep -m1 -E "iPhone" | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/')
+          xcodebuild test -project Khel.xcodeproj -scheme Khel -destination "id=$DEVICE" \
+            CODE_SIGNING_ALLOWED=NO -only-testing:KhelTests -quiet

@@ -1,0 +1,77 @@
+name: Khel
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    CODE_SIGN_STYLE: Automatic
+    TARGETED_DEVICE_FAMILY: "1"
+targets:
+  Khel:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+      - Resources
+    configFiles:
+      Debug: Config/App.xcconfig
+      Release: Config/App.xcconfig
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(KH_BUNDLE_ID)
+        PRODUCT_NAME: Khel
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: Khel
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UIUserInterfaceStyle: Dark
+        UIRequiresFullScreen: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSLocalNetworkUsageDescription: Khel finds and connects to nearby iPhones on your Wi-Fi so you can play together.
+        NSBonjourServices:
+          - _khel._tcp
+        ITSAppUsesNonExemptEncryption: false
+  KhelTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: Khel
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(KH_BUNDLE_ID).tests
+        GENERATE_INFOPLIST_FILE: YES
+        BUNDLE_LOADER: $(TEST_HOST)
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Khel.app/Khel
+  KhelUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: Khel
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(KH_BUNDLE_ID).uitests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  Khel:
+    build:
+      targets:
+        Khel: all
+        KhelTests: [test]
+        KhelUITests: [test]
+    test:
+      targets: [KhelTests]

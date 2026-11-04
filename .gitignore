@@ -1,0 +1,10 @@
+*.xcodeproj/
+build/
+DerivedData/
+logs/
+.DS_Store
+xcuserdata/
+*.xcuserstate
+.vscode/
+Sources/Info.plist
+Config/Signing.xcconfig
