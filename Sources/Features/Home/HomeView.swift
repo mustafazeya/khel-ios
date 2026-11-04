@@ -140,6 +140,7 @@ struct GameSetupView: View {
 
     @State private var players = 2
     @State private var level: AILevel = .medium
+    @State private var showHowTo = false
 
     private var info: GameInfo { entry.info }
 
@@ -160,9 +161,11 @@ struct GameSetupView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
 
                     Card {
-                        VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: 10) {
                             Kicker(text: "How to play")
                             Text(info.rules).font(.callout).foregroundStyle(Theme.text2)
+                            Button { showHowTo = true } label: { Label("Step by step and video", systemImage: "play.rectangle.fill") }
+                                .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         }
                     }
 
@@ -183,6 +186,7 @@ struct GameSetupView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .sheet(isPresented: $showHowTo) { HowToPlaySheet(info: info) }
     }
 
     @ViewBuilder private var modes: some View {

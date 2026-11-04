@@ -78,7 +78,7 @@ struct SoloGameScreen<Content: View>: View {
                 Spacer()
                 Label(info.title, systemImage: info.symbol).font(.khHeadline)
                 Spacer()
-                Color.clear.frame(width: 36, height: 36)
+                HowToPlayButton(info: info)
             }
             .padding(.horizontal, 16).padding(.vertical, 8)
             content()
@@ -165,18 +165,19 @@ struct GameChrome<Content: View>: View {
             Spacer()
             Label(info.title, systemImage: info.symbol).font(.khHeadline)
             Spacer()
-            if networked {
-                Menu {
-                    ForEach(Self.emotes, id: \.self) { e in
-                        Button(e) { room?.sendEmote(e, seat: mySeats.min()) }
+            HStack(spacing: 8) {
+                HowToPlayButton(info: info)
+                if networked {
+                    Menu {
+                        ForEach(Self.emotes, id: \.self) { e in
+                            Button(e) { room?.sendEmote(e, seat: mySeats.min()) }
+                        }
+                    } label: {
+                        Image(systemName: "face.smiling").font(.system(size: 16, weight: .bold)).frame(width: 36, height: 36)
+                            .background(Theme.surface2, in: Circle())
                     }
-                } label: {
-                    Image(systemName: "face.smiling").font(.system(size: 16, weight: .bold)).frame(width: 36, height: 36)
-                        .background(Theme.surface2, in: Circle())
+                    .accessibilityLabel("Send reaction")
                 }
-                .accessibilityLabel("Send reaction")
-            } else {
-                Color.clear.frame(width: 36, height: 36)
             }
         }
         .padding(.top, 4)

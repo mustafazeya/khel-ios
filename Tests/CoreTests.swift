@@ -123,6 +123,21 @@ final class CoreTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(GameCatalog.all.count, 19)
     }
 
+    // MARK: How to play
+
+    @MainActor func testEveryGameHasAGuideAndAValidVideoLink() {
+        for e in GameCatalog.all {
+            let guide = HowToPlay.guide(for: e.id)
+            XCTAssertNotNil(guide, "\(e.id) has no how-to-play guide")
+            XCTAssertFalse(guide?.steps.isEmpty ?? true)
+            XCTAssertFalse(guide?.controls.isEmpty ?? true)
+            let url = guide?.videoURL
+            XCTAssertEqual(url?.host, "www.youtube.com")
+            XCTAssertTrue(url?.absoluteString.contains("search_query=how%20to%20play") == true || url?.absoluteString.contains("search_query=how+to+play") == true, "\(e.id): \(url?.absoluteString ?? "")")
+        }
+        XCTAssertEqual(Set(HowToPlay.all.keys), Set(GameCatalog.all.map(\.id)), "guides and catalog must match exactly")
+    }
+
     // MARK: Stats
 
     @MainActor func testStatsRecording() {
